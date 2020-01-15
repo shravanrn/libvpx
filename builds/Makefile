@@ -1,4 +1,4 @@
-.PHONY : build clean
+.PHONY : build clean x64/nacl_build
 
 .DEFAULT_GOAL := build
 SHELL := /bin/bash
@@ -47,8 +47,9 @@ x64/nacl_build:
 	--disable-examples --disable-tools --disable-docs --disable-unit-tests \
 	--enable-multi-res-encoding --enable-postproc --enable-vp9-postproc \
 	--as=nasm \
-	--disable-sse
-	# simd stuff causing issues, so disabling for now
+	--enable-optimizations \
+	--disable-ssse3
+	# higher simd stuff causing issues, so disabling for now. This level of simd sufficient for perf.
 	echo "CC=$(NACL_CLANG64)" >> $@/libs-x86_64-linux-gcc.mk
 	echo "CXX=$(NACL_CLANG++64)" >> $@/libs-x86_64-linux-gcc.mk
 	echo "AR=$(NACL_AR64)" >> $@/libs-x86_64-linux-gcc.mk

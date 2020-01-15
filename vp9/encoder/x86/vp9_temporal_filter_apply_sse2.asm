@@ -40,7 +40,7 @@ sym(vp9_temporal_filter_apply_sse2):
     %define rbp_backup    80
     %define stack_size    96
     sub         rsp,           stack_size
-    mov         [rsp + rbp_backup], rbp
+    mov         [rsp + rbp_backup], r11
     ; end prolog
 
         mov         edx,            arg(3)
@@ -70,7 +70,7 @@ sym(vp9_temporal_filter_apply_sse2):
         punpcklwd   xmm0,           xmm0
         movdqa      [rsp + filter_weight], xmm0
 
-        mov         rbp,            arg(1) ; stride
+        mov         r11,            arg(1) ; stride
         pxor        xmm7,           xmm7   ; zero for extraction
 
         mov         rcx,            [rsp + block_width]
@@ -81,16 +81,16 @@ sym(vp9_temporal_filter_apply_sse2):
 
 .temporal_filter_apply_load_8:
         movq        xmm0,           [rsi]  ; first row
-        lea         rsi,            [rsi + rbp] ; += stride
+        lea         rsi,            [rsi + r11] ; += stride
         punpcklbw   xmm0,           xmm7   ; src[ 0- 7]
         movq        xmm1,           [rsi]  ; second row
-        lea         rsi,            [rsi + rbp] ; += stride
+        lea         rsi,            [rsi + r11] ; += stride
         punpcklbw   xmm1,           xmm7   ; src[ 8-15]
         jmp         .temporal_filter_apply_load_finished
 
 .temporal_filter_apply_load_16:
         movdqa      xmm0,           [rsi]  ; src (frame1)
-        lea         rsi,            [rsi + rbp] ; += stride
+        lea         rsi,            [rsi + r11] ; += stride
         movdqa      xmm1,           xmm0
         punpcklbw   xmm0,           xmm7   ; src[ 0- 7]
         punpckhbw   xmm1,           xmm7   ; src[ 8-15]
@@ -189,7 +189,7 @@ sym(vp9_temporal_filter_apply_sse2):
 
 .temporal_filter_apply_epilog:
     ; begin epilog
-    mov         rbp,            [rsp + rbp_backup]
+    mov         r11,            [rsp + rbp_backup]
     add         rsp,            stack_size
     pop         rsp
     pop         rdi

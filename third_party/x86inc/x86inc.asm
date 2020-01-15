@@ -736,8 +736,10 @@ DECLARE_ARG 7, 8, 9, 10, 11, 12, 13, 14
 
 %define last_branch_adr $$
 %macro AUTO_REP_RET 0
-    %if notcpuflag(ssse3)
-        times ((last_branch_adr-$)>>31)+1 rep ; times 1 iff $ == last_branch_adr.
+    %ifndef COMPILING_FOR_NACL
+        %if notcpuflag(ssse3)
+            times ((last_branch_adr-$)>>31)+1 rep ; times 1 iff $ == last_branch_adr.
+        %endif
     %endif
     ret
     annotate_function_size

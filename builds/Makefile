@@ -1,4 +1,4 @@
-.PHONY : build clean x64/nacl_build
+.PHONY : build clean
 
 .DEFAULT_GOAL := build
 SHELL := /bin/bash
@@ -36,7 +36,8 @@ x64/non_nacl_build:
 	--enable-pic \
 	--disable-examples --disable-tools --disable-docs --disable-unit-tests \
 	--enable-multi-res-encoding --enable-postproc --enable-vp9-postproc \
-	--as=nasm
+	--as=nasm \
+	--enable-optimizations
 	echo "AS=$(NACL_NASM)" >> $@/libs-x86_64-linux-gcc.mk
 	cd $@ && make -j8
 
